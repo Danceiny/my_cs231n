@@ -1,0 +1,225 @@
+@@@@@validation@@@@@ lr 1.000000e-08 reg 5.000000e+04 train accuracy: 0.308408 val accuracy: 0.316000
+End one validation.....
+
+one combination....(0.21520326530612241, 0.21612000000000001)
+
+@@@@@validation@@@@@ lr 5.000000e-07 reg 5.000000e+04 train accuracy: 0.323592 val accuracy: 0.341000
+End one validation.....
+
+one combination....(0.32558367346938766, 0.32300000000000006)
+
+@@@@@validation@@@@@ lr 1.000000e-06 reg 5.000000e+04 train accuracy: 0.322898 val accuracy: 0.332000
+End one validation.....
+
+one combination....(0.3195257142857143, 0.31818000000000007)
+
+@@@@@validation@@@@@ lr 1.500000e-06 reg 5.000000e+04 train accuracy: 0.305714 val accuracy: 0.307000
+End one validation.....
+
+one combination....(0.31277755102040827, 0.31262000000000006)
+
+@@@@@validation@@@@@ lr 2.000000e-06 reg 5.000000e+04 train accuracy: 0.279490 val accuracy: 0.302000
+End one validation.....
+
+one combination....(0.30355714285714286, 0.30349999999999999)
+
+@@@@@validation@@@@@ lr 2.500000e-06 reg 5.000000e+04 train accuracy: 0.291224 val accuracy: 0.310000
+End one validation.....
+
+one combination....(0.29874612244897963, 0.29560000000000003)
+
+@@@@@validation@@@@@ lr 3.000000e-06 reg 5.000000e+04 train accuracy: 0.287490 val accuracy: 0.293000
+End one validation.....
+
+one combination....(0.28656979591836729, 0.28288000000000002)
+
+@@@@@validation@@@@@ lr 3.500000e-06 reg 5.000000e+04 train accuracy: 0.246653 val accuracy: 0.261000
+End one validation.....
+
+one combination....(0.27433673469387754, 0.27078000000000002)
+
+@@@@@validation@@@@@ lr 4.000000e-06 reg 5.000000e+04 train accuracy: 0.250816 val accuracy: 0.255000
+End one validation.....
+
+one combination....(0.26410489795918368, 0.26484000000000002)
+
+@@@@@validation@@@@@ lr 4.500000e-06 reg 5.000000e+04 train accuracy: 0.246327 val accuracy: 0.227000
+End one validation.....
+
+one combination....(0.24775020408163273, 0.24515999999999993)
+
+@@@@@validation@@@@@ lr 5.000000e-06 reg 5.000000e+04 train accuracy: 0.194061 val accuracy: 0.208000
+End one validation.....
+
+one combination....(0.21836897959183665, 0.21714000000000006)
+
+@@@@@validation@@@@@ lr 5.500000e-06 reg 5.000000e+04 train accuracy: 0.166306 val accuracy: 0.174000
+End one validation.....
+
+one combination....(0.19047346938775506, 0.18865999999999999)
+
+@@@@@validation@@@@@ lr 6.000000e-06 reg 5.000000e+04 train accuracy: 0.199592 val accuracy: 0.185000
+End one validation.....
+
+one combination....(0.178569387755102, 0.17738000000000007)
+
+@@@@@validation@@@@@ lr 6.500000e-06 reg 5.000000e+04 train accuracy: 0.181592 val accuracy: 0.179000
+End one validation.....
+
+one combination....(0.1612265306122449, 0.15931999999999996)
+
+@@@@@validation@@@@@ lr 7.000000e-06 reg 5.000000e+04 train accuracy: 0.135898 val accuracy: 0.140000
+End one validation.....
+
+one combination....(0.15852653061224489, 0.15577999999999995)
+
+@@@@@validation@@@@@ lr 7.500000e-06 reg 5.000000e+04 train accuracy: 0.156653 val accuracy: 0.160000
+End one validation.....
+
+one combination....(0.14721428571428571, 0.14794000000000004)
+
+@@@@@validation@@@@@ lr 8.000000e-06 reg 5.000000e+04 train accuracy: 0.161939 val accuracy: 0.157000
+End one validation.....
+
+one combination....(0.14872081632653059, 0.14588000000000004)
+
+@@@@@validation@@@@@ lr 8.500000e-06 reg 5.000000e+04 train accuracy: 0.119122 val accuracy: 0.128000
+End one validation.....
+
+one combination....(0.14029836734693876, 0.14128000000000004)
+
+@@@@@validation@@@@@ lr 9.000000e-06 reg 5.000000e+04 train accuracy: 0.141918 val accuracy: 0.134000
+End one validation.....
+
+one combination....(0.14240040816326532, 0.14392000000000002)
+
+@@@@@validation@@@@@ lr 9.500000e-06 reg 5.000000e+04 train accuracy: 0.096122 val accuracy: 0.083000
+End one validation.....
+
+one combination....(0.14656775510204079, 0.14827999999999997)
+
+@@@@@validation@@@@@ lr 1.000000e-05 reg 5.000000e+04 train accuracy: 0.116633 val accuracy: 0.121000
+End one validation.....
+
+one combination....(0.13346938775510198, 0.13308)
+
+@@@@@validation@@@@@ lr 1.050000e-05 reg 5.000000e+04 train accuracy: 0.163245 val accuracy: 0.144000
+End one validation.....
+
+one combination....(0.13145673469387756, 0.13028000000000003)
+
+@@@@@validation@@@@@ lr 1.100000e-05 reg 5.000000e+04 train accuracy: 0.113959 val accuracy: 0.119000
+End one validation.....
+
+one combination....(0.12876857142857151, 0.12628)
+
+@@@@@validation@@@@@ lr 1.150000e-05 reg 5.000000e+04 train accuracy: 0.106612 val accuracy: 0.104000
+End one validation.....
+
+one combination....(0.12817755102040818, 0.12717999999999999)
+
+@@@@@validation@@@@@ lr 1.200000e-05 reg 5.000000e+04 train accuracy: 0.129388 val accuracy: 0.126000
+End one validation.....
+
+one combination....(0.13126081632653061, 0.13138000000000002)
+
+@@@@@validation@@@@@ lr 1.000000e+00 reg 5.000000e+04 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.10000000000000001, 0.10000000000000001)
+
+@@@@@validation@@@@@ lr 1.000000e-01 reg 5.000000e+04 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.10000000000000001, 0.10000000000000001)
+
+@@@@@validation@@@@@ lr 1.000000e-02 reg 5.000000e+04 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.090505000000000002, 0.090259999999999993)
+
+@@@@@validation@@@@@ lr 1.000000e-03 reg 5.000000e+04 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.094174999999999995, 0.09418)
+
+@@@@@validation@@@@@ lr 1.000000e-04 reg 5.000000e+04 train accuracy: 0.089075 val accuracy: 0.089200
+End one validation.....
+
+one combination....(0.089099999999999999, 0.089099999999999999)
+
+@@@@@validation@@@@@ lr 1.000000e-05 reg 5.000000e+04 train accuracy: 0.109475 val accuracy: 0.106600
+End one validation.....
+
+one combination....(0.12698999999999999, 0.12642)
+
+@@@@@validation@@@@@ lr 1.000000e-06 reg 5.000000e+04 train accuracy: 0.327575 val accuracy: 0.322100
+End one validation.....
+
+one combination....(0.32038, 0.31969999999999998)
+
+@@@@@validation@@@@@ lr 1.000000e-07 reg 5.000000e+04 train accuracy: 0.317200 val accuracy: 0.313900
+End one validation.....
+
+one combination....(0.24379999999999996, 0.24112)
+
+@@@@@validation@@@@@ lr 1.000000e-08 reg 5.000000e+04 train accuracy: 0.127875 val accuracy: 0.126400
+End one validation.....
+
+one combination....(0.11578499999999999, 0.11583999999999998)
+
+@@@@@validation@@@@@ lr 1.000000e+00 reg 1.000000e+08 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.10000000000000001, 0.10000000000000001)
+
+@@@@@validation@@@@@ lr 1.000000e-01 reg 1.000000e+08 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.10000000000000001, 0.10000000000000001)
+
+@@@@@validation@@@@@ lr 1.000000e-02 reg 1.000000e+08 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.10000000000000001, 0.10000000000000001)
+
+@@@@@validation@@@@@ lr 1.000000e-03 reg 1.000000e+08 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.10000000000000001, 0.10000000000000001)
+
+@@@@@validation@@@@@ lr 1.000000e-04 reg 1.000000e+08 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.10000000000000001, 0.10000000000000001)
+
+@@@@@validation@@@@@ lr 1.000000e-05 reg 1.000000e+08 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.10627500000000001, 0.10564)
+
+@@@@@validation@@@@@ lr 1.000000e-06 reg 1.000000e+08 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.099769999999999998, 0.10006)
+
+@@@@@validation@@@@@ lr 1.000000e-07 reg 1.000000e+08 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.12903000000000001, 0.12842000000000001)
+
+@@@@@validation@@@@@ lr 1.000000e-08 reg 1.000000e+08 train accuracy: 0.206150 val accuracy: 0.206700
+End one validation.....
+
+one combination....(0.21338499999999999, 0.2122)
+
+@@@@@validation@@@@@ lr 1.000000e+00 reg 5.000000e+04 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.10000000000000001, 0.10000000000000001)
+
+@@@@@validation@@@@@ lr 1.000000e-01 reg 5.000000e+04 train accuracy: 0.099650 val accuracy: 0.101400
+End one validation.....
+
+one combination....(0.10000000000000001, 0.10000000000000001)
+
