@@ -81,9 +81,9 @@ class TwoLayerNet(object):
         # evaluate class scores, [N * K]
         
         # X[N,D] dot W1[inputsizeD,hiddensizeH] = hidden_layer[N,H]
-        hidden_layer = np.maximum(0,np.dot(X,W1)+b1)    # ReLU activation
+        hidden_layer_1 = ReLU(np.dot(X,W1)+b1)    # ReLU activation
         # hidden_layer[N,H] dot W2[hiddensizeH,outputsizeC] = hidden_layer[scores[N,C]
-        scores = np.dot(hidden_layer,W2)+b2 
+        scores = np.dot(hidden_layer_1,W2)+b2 
 
         #############################################################################
         #                              END OF YOUR CODE                             #
@@ -138,8 +138,7 @@ class TwoLayerNet(object):
         # first backprop into parameters W2 and b2
         
         ## hidden_layer.T[H,N] dot dscores[N,C]
-        dW2 = np.dot(hidden_layer.T,dscores)
-        ## 
+        dW2 = np.dot(hidden_layer_1.T,dscores)
         db2 = np.sum(dscores, axis=0, keepdims=False)
 
         # next backprop into hidden layer
@@ -149,7 +148,7 @@ class TwoLayerNet(object):
 
         # backprop the ReLU non-linearity   
         # ##The network uses a ReLU nonlinearity after the first fully connected layer.
-        dhidden[hidden_layer<=0] = 0
+        dhidden[hidden_layer_1<=0] = 0
 
         # finally into W,b
 
@@ -170,13 +169,53 @@ class TwoLayerNet(object):
         #############################################################################
         #                              END OF YOUR CODE                             #
         #############################################################################
+        '''
+        # Compute the lossloss = None
+        # Considering the Numeric Stability
+        scores_max = np.max(scores, axis=1, keepdims=True)    # (N,1)
+        # Compute the class probabilities
+        exp_scores = np.exp(scores - scores_max)              # (N,C)
+        probs = exp_scores / np.sum(exp_scores, axis=1, keepdims=True)    # (N,C)
+        # cross-entropy loss and L2-regularization
+        correct_logprobs = -np.log(probs[range(N), y])        # (N,1)
+        data_loss = np.sum(correct_logprobs) / N
+        reg_loss = 0.5 * reg * np.sum(W1*W1) + 0.5 * reg * np.sum(W2*W2)
+        loss = data_loss + reg_loss
 
+        # Backward pass: compute gradients
+        grads = {}
+        # Compute the gradient of scores
+        dscores = probs                                 # (N,C)
+        dscores[range(N), y] -= 1
+        dscores /= N
+        # Backprop into W2 and b2
+        dW2 = np.dot(h1.T, dscores)                     # (H,C)
+        db2 = np.sum(dscores, axis=0, keepdims=True)    # (1,C)
+        # Backprop into hidden layer
+        dh1 = np.dot(dscores, W2.T)                     # (N,H)
+        # Backprop into ReLU non-linearity
+        dh1[h1 <= 0] = 0
+        # Backprop into W1 and b1
+        dW1 = np.dot(X.T, dh1)                          # (D,H)
+        db1 = np.sum(dh1, axis=0, keepdims=True)        # (1,H)
+        # Add the regularization gradient contribution
+        dW2 += reg * W2
+        dW1 += reg * W1
+        grads['W1'] = dW1
+        grads['b1'] = db1
+        grads['W2'] = dW2
+        grads['b2'] = db2
+        
+        '''
         return loss, grads
-
+    
+    #def train(self, X, y, X_val, y_val, learning_rate=1e-3, 
+    #               learning_rate_decay=0.95, reg=1e-5, mu=0.9, num_epochs=10, 
+    #              mu_increase=1.0, batch_size=200, verbose=False):   
     def train(self, X, y, X_val, y_val,
                         learning_rate=1e-3, learning_rate_decay=0.95,
-                        reg=1e-5, num_iters=100,
-                        batch_size=200, verbose=False):
+                        reg=1e-5, mu=0.9, mu_increase=1.0,
+                        num_epochs=10, num_iters=100,  batch_size=200, verbose=False):
         """
         Train this neural network using stochastic gradient descent.
 
@@ -196,13 +235,15 @@ class TwoLayerNet(object):
         """
         num_train = X.shape[0]
         iterations_per_epoch = max(num_train / batch_size, 1)
-
+        v_W2, v_b2 = 0.0, 0.0
+        v_W1, v_b1 = 0.0, 0.0
         # Use SGD to optimize the parameters in self.model
         loss_history = []
         train_acc_history = []
         val_acc_history = []
-
-        for it in xrange(num_iters):
+        
+        for it in xrange(1, num_epochs * iterations_per_epoch + 1):   
+        #for it in xrange(num_iters):
             X_batch = None
             y_batch = None
 
@@ -233,24 +274,90 @@ class TwoLayerNet(object):
             self.params['W2'] -= learning_rate*dW2 
             self.params['b1'] -= learning_rate*db1 
             self.params['b2'] -= learning_rate*db2
+            
+            # Perform parameter update (with momentum)    
+            v_W2 = mu * v_W2 - learning_rate * grads['W2']    
+            self.params['W2'] += v_W2   
+            v_b2 = mu * v_b2 - learning_rate * grads['b2']    
+            self.params['b2'] += v_b2   
+            v_W1 = mu * v_W1 - learning_rate * grads['W1']    
+            self.params['W1'] += v_W1   
+            v_b1 = mu * v_b1 - learning_rate * grads['b1']  
+            self.params['b1'] += v_b1   
+            
+
             #########################################################################
             #                             END OF YOUR CODE                          #
             #########################################################################
-
+            '''
             if verbose and it % 100 == 0:
                 print 'iteration %d / %d: loss %f' % (it, num_iters, loss)
+            '''
 
             # Every epoch, check train and val accuracy and decay learning rate.
             if it % iterations_per_epoch == 0:
-                # Check accuracy
+                # Check accuracy 
+                epoch = it / iterations_per_epoch 
+                
                 train_acc = (self.predict(X_batch) == y_batch).mean()
                 val_acc = (self.predict(X_val) == y_val).mean()
                 train_acc_history.append(train_acc)
                 val_acc_history.append(val_acc)
-
+                print 'epoch %d / %d: loss %f, train_acc: %f, val_acc: %f' % (epoch, num_epochs, loss, train_acc, val_acc)  
                 # Decay learning rate
                 learning_rate *= learning_rate_decay
+                # Increase mu
+                mu *= mu_increase
+        '''
+         num_train = X.shape[0]
+        iterations_per_epoch = max(num_train / batch_size, 1)
+        # Use SGD to optimize the parameters
+        v_W2, v_b2 = 0.0, 0.0
+        v_W1, v_b1 = 0.0, 0.0
+        loss_history = []
+        train_acc_history = []
+        val_acc_history = []
 
+        for it in xrange(1, num_epochs * iterations_per_epoch + 1):   
+            X_batch = None   
+            y_batch = None    
+            # Sampling with replacement is faster than sampling without replacement.   
+            sample_index = np.random.choice(num_train, batch_size, replace=True)   
+            X_batch = X[sample_index, :]        # (batch_size,D)    
+            y_batch = y[sample_index]           # (1,batch_size)   
+
+            # Compute loss and gradients using the current minibatch 
+            loss, grads = self.loss(X_batch, y=y_batch, reg=reg) 
+            loss_history.append(loss)    
+
+            # Perform parameter update (with momentum)    
+            v_W2 = mu * v_W2 - learning_rate * grads['W2']    
+            self.params['W2'] += v_W2   
+            v_b2 = mu * v_b2 - learning_rate * grads['b2']    
+            self.params['b2'] += v_b2   
+            v_W1 = mu * v_W1 - learning_rate * grads['W1']    
+            self.params['W1'] += v_W1   
+            v_b1 = mu * v_b1 - learning_rate * grads['b1']  
+            self.params['b1'] += v_b1    
+            """    
+            if verbose and it % 100 == 0:        
+                print 'iteration %d / %d: loss %f' % (it, num_iters, loss) 
+            """   
+            # Every epoch, check train and val accuracy and decay learning rate.
+            if verbose and it % iterations_per_epoch == 0:    
+                # Check accuracy    
+                epoch = it / iterations_per_epoch    
+                train_acc = (self.predict(X_batch) == y_batch).mean()    
+                val_acc = (self.predict(X_val) == y_val).mean()    
+                train_acc_history.append(train_acc)    
+                val_acc_history.append(val_acc)    
+                print 'epoch %d / %d: loss %f, train_acc: %f, val_acc: %f' % 
+                                    (epoch, num_epochs, loss, train_acc, val_acc)    
+                # Decay learning rate    
+                learning_rate *= learning_rate_decay    
+                # Increase mu    
+                mu *= mu_increase
+            '''
         return {
             'loss_history': loss_history,
             'train_acc_history': train_acc_history,
@@ -273,16 +380,20 @@ class TwoLayerNet(object):
             to have class c, where 0 <= c < C.
         """
         y_pred = None
+  
 
         ###########################################################################
         # TODO: Implement this function; it should be VERY simple!                #
         ###########################################################################
-        hidden_layer = np.maximum(0,np.dot(X,self.params['W1']) + self.params['b1'])
-        y_pred = np.argmax(np.dot(hidden_layer, self.params['W2']),axis=1)
+        hidden_layer_1 = ReLU(np.dot(X,self.params['W1']) + self.params['b1'])
+        scores = np.dot(hidden_layer_1, self.params['W2'])
+        y_pred = np.argmax(scores,axis=1)
         ###########################################################################
         #                              END OF YOUR CODE                           #
         ###########################################################################
 
         return y_pred
-
+def ReLU(x):    
+    """ReLU non-linearity."""    
+    return np.maximum(0, x)
 
