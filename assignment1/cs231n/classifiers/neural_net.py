@@ -42,7 +42,7 @@ class TwoLayerNet(object):
         self.params['W2'] = std * np.random.randn(hidden_size, output_size)
         self.params['b2'] = np.zeros(output_size)
 
-    def loss(self, X, y=None, reg=0.0):
+    def loss(self, X, y=None, reg=0.0, activation='ReLU'):
         """
         Compute the loss and gradients for a two layer fully connected neural
         network.
@@ -81,7 +81,18 @@ class TwoLayerNet(object):
         # evaluate class scores, [N * K]
         
         # X[N,D] dot W1[inputsizeD,hiddensizeH] = hidden_layer[N,H]
-        hidden_layer_1 = ReLU(np.dot(X,W1)+b1)    # ReLU activation
+        to_activate = np.dot(X,W1)+b1
+        if activation=='ReLU':
+            hidden_layer_1 = ReLU(to_activate)    # ReLU activation
+        elif activation=='Sigmoid':
+            hidden_layer_1 = Sigmoid(to_activate)
+        elif activation=='tanh':
+            hidden_layer_1 = tanh(to_activate)
+        elif activation=='Maxout':
+            hidden_layer_1 = Maxout(to_activate)
+        elif activation=='ELU':
+            hidden_layer_1 = ELU(to_activate)
+            
         # hidden_layer[N,H] dot W2[hiddensizeH,outputsizeC] = hidden_layer[scores[N,C]
         scores = np.dot(hidden_layer_1,W2)+b2 
 
@@ -148,8 +159,10 @@ class TwoLayerNet(object):
 
         # backprop the ReLU non-linearity   
         # ##The network uses a ReLU nonlinearity after the first fully connected layer.
-        dhidden[hidden_layer_1<=0] = 0
-
+        if activation=='ReLU':
+            dhidden[hidden_layer_1<=0] = 0
+        elif activation=='Maxout':
+            
         # finally into W,b
 
         ## X.T[C,N] dot dhidden[]
@@ -346,11 +359,11 @@ class TwoLayerNet(object):
 def ReLU(x):    
     """ReLU non-linearity."""    
     return np.maximum(0, x)
-def Sigmoid(X)
-    return 1/(1+np.exp(-X)
-def tanh(X)
-    return np.tanh(X)
-def Maxout(X)
+def Sigmoid(x)
+    return 1/(1+np.exp(-x)
+def tanh(x)
+    return np.tanh(x)
+def Maxout(x)
     pass
 def ELU(X)
     pass

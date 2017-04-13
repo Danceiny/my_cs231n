@@ -47,7 +47,7 @@ class TwoLayerNet(object):
         #######################################################################
         self.params['W1'] = weight_scale * \
             np.random.randn(input_dim, hidden_dim)
-        self.params['W2'] = weight_scale * np.random.randn(input_dim,hidden_dim)
+        self.params['W2'] = weight_scale * np.random.randn(hidden_dim,num_classes)
         self.params['b1'] = np.zeros((1,hidden_dim))
         self.params['b2'] = np.zeros((1,num_classes))
 
@@ -84,7 +84,9 @@ class TwoLayerNet(object):
         W2, b2 = self.params['W2'], self.params['b2']
         # Convenience layer that perorms an affine transform followed by a ReLU
         h1, cache1 = affine_relu_forward(X, W1, b1)
+        #print "h1=",h1.shape
         out, cache2 = affine_forward(h1, W2, b2)
+        #print "out=",out.shape
         scores = out              # (N,C)
         #######################################################################
         #                             END OF YOUR CODE                             #

@@ -170,22 +170,21 @@ def adam(x, dx, config=None):
 
     
     
-    def adagrad(x, dx, config=None):
-        if config is None: config = {}
-        config.setdefault('learning_rate', 1e-3)
-        config.setdefault('beta1', 0.9)
-        config.setdefault('beta2', 0.999)
-        config.setdefault('epsilon', 1e-8)
-        config.setdefault('m', np.zeros_like(x))
-        config.setdefault('v', np.zeros_like(x))
-        config.setdefault('t', 0)
-
-        cache = config['cache']
-        decay_rate = config['decay_rate']
-        learning_rate = config['learning_rate']
-        epsilon = config['epsilon']
-        cache += dx**2
-        x += - learning_rate * dx / (np.sqrt(cache) + epsilon)
-        next_x = x 
-        config['cache'] = cache
-        return next_x, config
+def adagrad(x, dx, config=None):
+    if config is None: 
+        print "config is none"
+        config = {}
+    config.setdefault('learning_rate', 1e-3)
+    config.setdefault('epsilon', 1e-8)
+    config.setdefault('cache', np.zeros_like(dx))
+    
+    cache = config['cache']
+    learning_rate = config['learning_rate']
+    epsilon = config['epsilon']
+    
+    cache += dx**2
+    x += - learning_rate * dx / (np.sqrt(cache) + epsilon)
+    
+    next_x = x 
+    config['cache'] = cache
+    return next_x, config

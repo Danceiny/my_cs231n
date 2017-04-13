@@ -28,6 +28,7 @@ def affine_forward(x, w, b):
     # Reshape x into N rows
     N = x.shape[0]
     x_row = x.reshape(N,-1) # [N,D]
+    #print x_row.shape
     out = np.dot(x_row,w) + b
     
     #############################################################################
@@ -57,7 +58,14 @@ def affine_backward(dout, cache):
     #############################################################################
     # TODO: Implement the affine backward pass.                                 #
     #############################################################################
-    pass
+    x, w, b = cache    
+    dx, dw, db = None, None, None   
+    dx = np.dot(dout, w.T)                       # (N,D)    
+    dx = np.reshape(dx, x.shape)                 # (N,d1,...,d_k)   
+    x_row = x.reshape(x.shape[0], -1)            # (N,D)    
+    dw = np.dot(x_row.T, dout)                   # (D,M)    
+    db = np.sum(dout, axis=0, keepdims=True)     # (1,M)    
+
     #############################################################################
     #                             END OF YOUR CODE                              #
     #############################################################################
