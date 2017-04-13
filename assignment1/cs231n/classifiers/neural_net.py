@@ -308,56 +308,6 @@ class TwoLayerNet(object):
                 learning_rate *= learning_rate_decay
                 # Increase mu
                 mu *= mu_increase
-        '''
-         num_train = X.shape[0]
-        iterations_per_epoch = max(num_train / batch_size, 1)
-        # Use SGD to optimize the parameters
-        v_W2, v_b2 = 0.0, 0.0
-        v_W1, v_b1 = 0.0, 0.0
-        loss_history = []
-        train_acc_history = []
-        val_acc_history = []
-
-        for it in xrange(1, num_epochs * iterations_per_epoch + 1):   
-            X_batch = None   
-            y_batch = None    
-            # Sampling with replacement is faster than sampling without replacement.   
-            sample_index = np.random.choice(num_train, batch_size, replace=True)   
-            X_batch = X[sample_index, :]        # (batch_size,D)    
-            y_batch = y[sample_index]           # (1,batch_size)   
-
-            # Compute loss and gradients using the current minibatch 
-            loss, grads = self.loss(X_batch, y=y_batch, reg=reg) 
-            loss_history.append(loss)    
-
-            # Perform parameter update (with momentum)    
-            v_W2 = mu * v_W2 - learning_rate * grads['W2']    
-            self.params['W2'] += v_W2   
-            v_b2 = mu * v_b2 - learning_rate * grads['b2']    
-            self.params['b2'] += v_b2   
-            v_W1 = mu * v_W1 - learning_rate * grads['W1']    
-            self.params['W1'] += v_W1   
-            v_b1 = mu * v_b1 - learning_rate * grads['b1']  
-            self.params['b1'] += v_b1    
-            """    
-            if verbose and it % 100 == 0:        
-                print 'iteration %d / %d: loss %f' % (it, num_iters, loss) 
-            """   
-            # Every epoch, check train and val accuracy and decay learning rate.
-            if verbose and it % iterations_per_epoch == 0:    
-                # Check accuracy    
-                epoch = it / iterations_per_epoch    
-                train_acc = (self.predict(X_batch) == y_batch).mean()    
-                val_acc = (self.predict(X_val) == y_val).mean()    
-                train_acc_history.append(train_acc)    
-                val_acc_history.append(val_acc)    
-                print 'epoch %d / %d: loss %f, train_acc: %f, val_acc: %f' % 
-                                    (epoch, num_epochs, loss, train_acc, val_acc)    
-                # Decay learning rate    
-                learning_rate *= learning_rate_decay    
-                # Increase mu    
-                mu *= mu_increase
-            '''
         return {
             'loss_history': loss_history,
             'train_acc_history': train_acc_history,
@@ -396,4 +346,12 @@ class TwoLayerNet(object):
 def ReLU(x):    
     """ReLU non-linearity."""    
     return np.maximum(0, x)
-
+def Sigmoid(X)
+    return 1/(1+np.exp(-X)
+def tanh(X)
+    return np.tanh(X)
+def Maxout(X)
+    pass
+def ELU(X)
+    pass
+      
