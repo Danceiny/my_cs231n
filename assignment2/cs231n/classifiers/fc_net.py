@@ -21,7 +21,7 @@ class TwoLayerNet(object):
     """
 
     def __init__(self, input_dim=3 * 32 * 32, hidden_dim=100, num_classes=10,
-                 weight_scale=1e-3, reg=0.0):
+                 weight_scale=1e-3, reg=0.0, activation="ReLU"):
         """
         Initialize a new network.
 
@@ -36,7 +36,7 @@ class TwoLayerNet(object):
         """
         self.params = {}
         self.reg = reg
-
+        self.activation = activation
         #######################################################################
         # TODO: Initialize the weights and biases of the two-layer net. Weights    #
         # should be initialized from a Gaussian with standard deviation equal to   #
@@ -83,7 +83,17 @@ class TwoLayerNet(object):
         W1, b1 = self.params['W1'], self.params['b1']
         W2, b2 = self.params['W2'], self.params['b2']
         # Convenience layer that perorms an affine transform followed by a ReLU
-        h1, cache1 = affine_relu_forward(X, W1, b1)
+        if self.activation=="ReLU":
+            h1, cache1 = affine_relu_forward(X, W1, b1)
+        elif self.activation=="Maxout":
+            h1, cache1 = affine_maxout_forward(X,W1,b1)
+        elif self.activation=="Sigmoid":
+            h1, cache1 = affine_sigmoid_forward(X,W1,b1)
+        elif self.activation=="tanh":
+            h1, cache1 = affine_tanh_forward(X,W1,b1)
+        elif self.activation=="Leaky ReLU":
+            h1, cache1 = affine_leaky_relu_forward(X,W1,b1)
+
         #print "h1=",h1.shape
         out, cache2 = affine_forward(h1, W2, b2)
         #print "out=",out.shape
@@ -113,7 +123,18 @@ class TwoLayerNet(object):
 
         # Backward pass: compute gradients
         dh1,dW2,db2 = affine_backward(dscores,cache2)
-        dX,dW1,db1 = affine_relu_backward(dh1,cache1)
+
+        if self.activation=="ReLU":
+            dX,dW1,db1 = affine_relu_backward(dh1,cache1)
+        elif self.activation=="Maxout":
+            dX,dW1,db1 = affine_maxout_backward(dh1,cache1)
+        elif self.activation=="Sigmoid":
+            dX,dW1,db1 = affine_sigmoid_backward(dh1,cache1)
+        elif self.activation=="tanh":
+            dX,dW1,db1 = affine_tanh_backward(dh1,cache1)
+        elif self.activation=="Leaky ReLU":
+            h1,dW1,db1 = affine_leaky_relu_backward(dh1,cache1)
+
         # Add the regularization gradient contribution
         dW2 += self.reg * W2
         dW1 += self.reg * W1

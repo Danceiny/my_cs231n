@@ -72,6 +72,19 @@ def affine_backward(dout, cache):
     return dx, dw, db
 
 
+# activation forward 
+def sigmoid_forward(x):
+    out = None
+    out = Sigmoid(x)
+    cache = x
+    return out,cache
+
+def tanh_forward(x):
+    out = None
+    out = tanh(x)
+    cache = x
+    return out,cache
+
 def relu_forward(x):
     """
     Computes the forward pass for a layer of rectified linear units (ReLUs).
@@ -94,10 +107,41 @@ def relu_forward(x):
     cache = x
     return out, cache
 
+def leaky_relu_forward(x,alpha):
+    out = None
+    out = leaky_ReLU(x,alpha)
+    cache = x
+    return out, cache
+
+def elu_forward(x,alpha):
+    out = None
+    x[x>0] = x
+    x[x<=0] = alpha * (np.exp(x) - 1)
+    cache = x
+    return out, cache
+def maxout_forward(x):
+    pass
+
+# activation forward */
+
+
+# activation functions */
 def ReLU(x):    
     """ReLU non-linearity."""    
     return np.maximum(0, x)
 
+def leaky_ReLU(x,alpha):
+    return np.maximum(alpha*x,x)
+
+def Sigmoid(x):
+    return 1/(1+np.exp(-x))
+def tanh(x):
+    return np.tanh(x)
+
+# /* activation functions */
+
+
+# /* activation backward */
 def relu_backward(dout, cache):
     """
     Computes the backward pass for a layer of rectified linear units (ReLUs).
@@ -119,6 +163,30 @@ def relu_backward(dout, cache):
     #                             END OF YOUR CODE                              #
     #############################################################################
     return dx
+
+def leaky_relu_backward(dout,cache,alpha):
+    dx, x = None,cache
+    dx = dout.copy()
+    dx[x <= alpha * x] = 0
+    return dx
+
+def tanh_backward(dout,cache):
+    return (1-cache**2)*dout
+
+def elu_backward(dout,cache,alpha):
+    dx = dout
+    x,fx = cache
+    tmp = dx * (fx + alpha)
+    tmp[x>0] = 0
+    dx[x<=0] = 0
+    dx += tmp
+    return dx
+def maxout_backward(dout,cache,alpha):
+    pass
+def sigmoid_backward(dout,cache,alpha):
+    pass
+# /* activation backward */
+
 
 
 def batchnorm_forward(x, gamma, beta, bn_param):
@@ -182,7 +250,14 @@ def batchnorm_forward(x, gamma, beta, bn_param):
         # the momentum variable to update the running mean and running variance,    #
         # storing your result in the running_mean and running_var variables.        #
         #############################################################################
-        pass
+        sample_mean = np.mean(x,axis=0,keepdims=True)   #[1,D]
+        sample_var = np.var(x,axis=0,keepdims=True) #[1,D]
+        x_normalized = (x-sample_mean) / np.sqrt(sample_var + eps)  #[N,D]
+        out = gamma * x_normalized + beta
+        cache = (x_normalized, gamma, beta, sample_mean, sample_var, x, eps)
+        running_mean = momentum * running_mean + (1-momentum) * sample_mean
+        running_var = momentum * running_var + (1-momentum) * sample_var
+
         #############################################################################
         #                             END OF YOUR CODE                              #
         #############################################################################
@@ -193,7 +268,8 @@ def batchnorm_forward(x, gamma, beta, bn_param):
         # and shift the normalized data using gamma and beta. Store the result in   #
         # the out variable.                                                         #
         #############################################################################
-        pass
+        x_normalized = (x-running_mean) / np.sqrt(running_var + eps)
+        out = gamma * x_normalized + beta
         #############################################################################
         #                             END OF YOUR CODE                              #
         #############################################################################
@@ -229,7 +305,18 @@ def batchnorm_backward(dout, cache):
     # TODO: Implement the backward pass for batch normalization. Store the      #
     # results in the dx, dgamma, and dbeta variables.                           #
     #############################################################################
-    pass
+    x_normalized, gamma, beta, sample_mean, sample_var, x, eps = cache
+    N, D = x.shape
+    dx_normalized = dout * gamma    #[N,D]
+    x_mu = x - sample_mean  #[N,D]
+    sample_std_inv = 1.0 / np.sqrt(sample_var + eps)    #[1,D]
+    dsample_var = - 0.5 * np.sum(dx_normalized * sample_std_inv, axis=0, kepedims=True) - \
+                    2.0 * dsample_var * np.mean(x_mu, axis=0, keepdims=True)
+    dx1 = dx_normalized * sample_std_inv
+    dx2 = 2.0 / N * dsample_var * x_mu
+    dx = dx1 + dx2 + 1.0/N * dsample_mean
+    dgamma = np.sum(dout * x_normalized, axis=0, keepdims=True)
+    dbeta = np.sum(dout,axis=0,keepdims=True)
     #############################################################################
     #                             END OF YOUR CODE                              #
     #############################################################################
@@ -298,10 +385,11 @@ def dropout_forward(x, dropout_param):
         # TODO: Implement the training phase forward pass for inverted dropout.   #
         # Store the dropout mask in the mask variable.                            #
         ###########################################################################
-        pass
+        pass        
         ###########################################################################
         #                            END OF YOUR CODE                             #
         ###########################################################################
+
     elif mode == 'test':
         ###########################################################################
         # TODO: Implement the test phase forward pass for inverted dropout.       #

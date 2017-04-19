@@ -161,8 +161,14 @@ class TwoLayerNet(object):
         # ##The network uses a ReLU nonlinearity after the first fully connected layer.
         if activation=='ReLU':
             dhidden[hidden_layer_1<=0] = 0
+        elif activation=='Sigmoid':
+            dhidden = Sigmoid(to_activate)
+        elif activation=='tanh':
+            dhidden = tanh(to_activate)
         elif activation=='Maxout':
-            
+            dhidden = Maxout(to_activate)
+        elif activation=='ELU':
+            dhidden = ELU(to_activate)    
         # finally into W,b
 
         ## X.T[C,N] dot dhidden[]
@@ -359,12 +365,12 @@ class TwoLayerNet(object):
 def ReLU(x):    
     """ReLU non-linearity."""    
     return np.maximum(0, x)
-def Sigmoid(x)
-    return 1/(1+np.exp(-x)
-def tanh(x)
+def Sigmoid(x):
+    return 1/(1+np.exp(-x))
+def tanh(x):
     return np.tanh(x)
-def Maxout(x)
+def Maxout(x):
     pass
-def ELU(X)
+def ELU(X):
     pass
       

@@ -75,6 +75,24 @@ def sgd_momentum(w, dw, config=None):
     return next_w, config
 
 
+def nesterov_momentum(x,dx,config=None):
+    if config is None: config = {}
+    config.setdefault('learning_rate', 1e-2)
+    config.setdefault('decay_rate', 0.99)
+    config.setdefault('epsilon', 1e-8)
+    config.setdefault('momentum', 0.9)
+    config.setdefault('cache', np.zeros_like(x))
+    config.setdefault('velocity',np.zeros_like(x))
+    #v = config.get('velocity', np.zeros_like(w))
+    
+    mu = config['momentum']
+    learning_rate = config['learning_rate']
+
+    v_prev = v
+    v = config['velocity']
+    v = mu * v - learning_rate * dx
+    x += - mu * v_prev + (1 + mu) * v
+    return next_x, config
 
 def rmsprop(x, dx, config=None):
     """
@@ -171,9 +189,7 @@ def adam(x, dx, config=None):
     
     
 def adagrad(x, dx, config=None):
-    if config is None: 
-        print "config is none"
-        config = {}
+    if config is None: config = {}
     config.setdefault('learning_rate', 1e-3)
     config.setdefault('epsilon', 1e-8)
     config.setdefault('cache', np.zeros_like(dx))
