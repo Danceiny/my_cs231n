@@ -252,12 +252,26 @@ def batchnorm_forward(x, gamma, beta, bn_param):
         #############################################################################
         sample_mean = np.mean(x,axis=0,keepdims=True)   #[1,D]
         sample_var = np.var(x,axis=0,keepdims=True) #[1,D]
+        #sample_mean = np.mean(x,axis=0)   #[D,]
+        #sample_var = np.var(x,axis=0) #[D,]
+        #print x.shape, sample_mean.shape, sample_var.shape
+       
         x_normalized = (x-sample_mean) / np.sqrt(sample_var + eps)  #[N,D]
-        out = gamma * x_normalized + beta
+        #x_normalized = (x-sample_mean.T) / np.sqrt(sample_var.T + eps)  #[N,D]
+
+        #print x_normalized.shape,gamma.shape, beta.shape
+        out = x_normalized * gamma + beta
         cache = (x_normalized, gamma, beta, sample_mean, sample_var, x, eps)
         running_mean = momentum * running_mean + (1-momentum) * sample_mean
         running_var = momentum * running_var + (1-momentum) * sample_var
-
+        # cache = {}
+        # cache['sample_mean'] = sample_mean
+        # cache['sample_var'] = sample_var
+        # cache['x_normalized'] = x_normalized
+        # cache['x'] = x
+        # cache['gamma'] = gamma
+        # cache['beta'] = beta
+        # cache['eps'] = eps 
         #############################################################################
         #                             END OF YOUR CODE                              #
         #############################################################################
@@ -305,18 +319,34 @@ def batchnorm_backward(dout, cache):
     # TODO: Implement the backward pass for batch normalization. Store the      #
     # results in the dx, dgamma, and dbeta variables.                           #
     #############################################################################
+    # x_normalized, gamma, beta, sample_mean, sample_var, x, eps = cache
+    # N, D = x.shape
+    # dx_normalized = dout * gamma    #[N,D]
+    # x_mu = x - sample_mean  #[N,D]
+    # sample_std_inv = 1.0 / np.sqrt(sample_var + eps)    #[1,D]
+    # dsample_var = - 0.5 * np.sum(dx_normalized * sample_std_inv, axis=0, keepdims=True) - \
+    #                 2.0 * dsample_var * np.mean(x_mu, axis=0, keepdims=True)
+    
+    # dx1 = dx_normalized * sample_std_inv
+    # dx2 = 2.0 / N * dsample_var * x_mu
+    # dx = dx1 + dx2 + 1.0/N * dsample_mean
+    # dgamma = np.sum(dout * x_normalized, axis=0, keepdims=True)
+    # dbeta = np.sum(dout,axis=0,keepdims=True)
+
+    # https://github.com/martinkersner/cs231n/blob/master/assignment2/layers.py
+    
+    m = dout.shape[0]
     x_normalized, gamma, beta, sample_mean, sample_var, x, eps = cache
-    N, D = x.shape
-    dx_normalized = dout * gamma    #[N,D]
-    x_mu = x - sample_mean  #[N,D]
-    sample_std_inv = 1.0 / np.sqrt(sample_var + eps)    #[1,D]
-    dsample_var = - 0.5 * np.sum(dx_normalized * sample_std_inv, axis=0, kepedims=True) - \
-                    2.0 * dsample_var * np.mean(x_mu, axis=0, keepdims=True)
-    dx1 = dx_normalized * sample_std_inv
-    dx2 = 2.0 / N * dsample_var * x_mu
-    dx = dx1 + dx2 + 1.0/N * dsample_mean
-    dgamma = np.sum(dout * x_normalized, axis=0, keepdims=True)
-    dbeta = np.sum(dout,axis=0,keepdims=True)
+    dx_normalized = dout * gamma
+    dsample_var = np.sum(dx_normalized * (x - sample_mean) * (-0.5) * (sample_var + eps)**(-1.5), axis=0)
+    dsample_mean = np.sum(dx_normalized * (-1/np.sqrt(sample_var + eps)) , axis=0) + dsample_var * ((np.sum(-2*(x-sample_mean))) / m)
+
+    dx = dx_normalized * (1/np.sqrt(sample_var + eps)) + \
+        dsample_var * (2*(dx_normalized-sample_mean)/m) + \
+        dsample_mean/m
+
+    dbeta = np.sum(dout, axis=0)    # for optim, require no keepdims, require [D,] not [1,D]
+    dgamma = np.sum(dout * x_normalized, axis=0)
     #############################################################################
     #                             END OF YOUR CODE                              #
     #############################################################################
@@ -385,7 +415,8 @@ def dropout_forward(x, dropout_param):
         # TODO: Implement the training phase forward pass for inverted dropout.   #
         # Store the dropout mask in the mask variable.                            #
         ###########################################################################
-        pass        
+        mask = (np.random.rand(*x.shape) < p) / p
+        out = x * mask
         ###########################################################################
         #                            END OF YOUR CODE                             #
         ###########################################################################
@@ -394,7 +425,7 @@ def dropout_forward(x, dropout_param):
         ###########################################################################
         # TODO: Implement the test phase forward pass for inverted dropout.       #
         ###########################################################################
-        pass
+        out = x
         ###########################################################################
         #                            END OF YOUR CODE                             #
         ###########################################################################
@@ -421,7 +452,7 @@ def dropout_backward(dout, cache):
         ###########################################################################
         # TODO: Implement the training phase backward pass for inverted dropout.  #
         ###########################################################################
-        pass
+        dx = dout * mask
         ###########################################################################
         #                            END OF YOUR CODE                             #
         ###########################################################################
