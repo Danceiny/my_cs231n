@@ -123,6 +123,8 @@ def rmsprop(x, dx, config=None):
     learning_rate = config['learning_rate']
     epsilon = config['epsilon']
     cache = decay_rate * cache + (1 - decay_rate) * dx**2
+    x = np.reshape(x,cache.shape)
+    assert x.shape == cache.shape 
     x += - learning_rate * dx / (np.sqrt(cache) + epsilon)
     next_x = x 
     config['cache'] = cache
@@ -162,6 +164,8 @@ def adam(x, dx, config=None):
     # the next_x variable. Don't forget to update the m, v, and t variables     #
     # stored in config.                                                         #
     #############################################################################
+    #print 'adam x.shape test',x.shape
+
     m = config['m']
     v = config['v']
     beta1 = config['beta1']
@@ -174,9 +178,18 @@ def adam(x, dx, config=None):
     m = beta1 * m + (1-beta1) * dx  # update first moment
     ## RMSprop-like
     v = beta2 * v + (1-beta2) * (dx**2) # update second moment
-    x += - learning_rate * m / (np.sqrt(v) + epsilon)   
+    # print type(learning_rate),type(m),type(v),type(epsilon)
+    # print m.shape,v.shape,x.shape
 
-    next_x = x
+    x = np.reshape(x,m.shape)
+    assert x.shape == m.shape
+    # x += - learning_rate * m / (np.sqrt(v) + epsilon)   
+    # next_x = x
+    
+    mt = m / (1-beta1**t)
+    vt = v / (1-beta2**t) 
+    next_x = x - learning_rate * mt / (np.sqrt(vt) + epsilon)
+    
     config['m'] = m
     config['t'] = t
     config['v'] = v
@@ -197,7 +210,8 @@ def adagrad(x, dx, config=None):
     cache = config['cache']
     learning_rate = config['learning_rate']
     epsilon = config['epsilon']
-    
+    x = np.reshape(x,cache.shape)
+    assert x.shape == cache.shape
     cache += dx**2
     x += - learning_rate * dx / (np.sqrt(cache) + epsilon)
     
